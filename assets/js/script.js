@@ -49,7 +49,9 @@ let resultsHtml = resultsContentEl.innerHTML;
 let higScoresHtml = highScoresContentEl.innerHTML;
 
 // Timer variables
-let startTime = 75;
+let startTime = 15;
+let currentTime = startTime;
+let timePenalty = 10;
 let thisInterval;
 
 // quiz variables
@@ -57,15 +59,16 @@ let questionIndex = 0;
 
 let startTimer = function () {
   // Set the start time for the timer
-  countdownTimerEl.textContent = startTime;
+  currentTime = startTime;
+  countdownTimerEl.textContent = currentTime;
 
   // Clear any timer before setting it to be "thread safe"
   clearInterval(thisInterval);
 
   // Start timer and exit this function
   thisInterval = setInterval(function () {
-    countdownTimerEl.textContent = --startTime;
-    if (startTime === 0) {
+    countdownTimerEl.textContent = --currentTime;
+    if (currentTime === 0) {
       // Test is over
       clearInterval(thisInterval);
       endQuiz(null);
@@ -76,6 +79,7 @@ let startTimer = function () {
 let startQuiz = function () {
   pageContentEl.innerHTML = quizHtml;
   initAnswerListeners();
+  startTimer();
   questionIndex = 0;
 
   displayQuestion();
@@ -90,10 +94,11 @@ let displayQuestion = function () {
   }
 };
 
+// Display the result of the last answered question
 let displayResult = function (answerCorrect) {
   resultsWrapperEl = pageContentEl.querySelector("#result-wrapper");
   resultsWrapperEl.style.visibility = "visible";
-  //console.log
+  
   if (answerCorrect) {
     resultsWrapperEl.textContent = "Correct!";
   }
@@ -113,6 +118,13 @@ let checkAnswer = function (event) {
   }
   else {
     displayResult(false);
+    currentTime -= timePenalty;
+    if (currentTime <= 0) {
+      currentTime = 0;
+      endQuiz(answerCorrect);
+      return;
+    }
+    countdownTimerEl.textContent = currentTime;
   }
 
   questionIndex++;
@@ -126,10 +138,16 @@ let checkAnswer = function (event) {
   }
 };
 
+
+// End the quiz and display the score
 let endQuiz = function(answerCorrect){
   clearInterval(thisInterval);
+  countdownTimerEl.textContent = currentTime;
   pageContentEl.innerHTML = resultsHtml;
+  let scoreDisplay = pageContentEl.querySelector("#score");
 
+  scoreDisplay.textContent = currentTime;
+  // If the quiz ended because the last question was answered, display the results of the last question
   if (answerCorrect !== null)
   {
     displayResult(answerCorrect);
@@ -140,7 +158,7 @@ let endQuiz = function(answerCorrect){
 let initStartListeners = function () {
   startBtn = document.querySelector("#btnStart");
 
-  startBtn.addEventListener("click", main);
+  startBtn.addEventListener("click", startQuiz);
 }
 
 // Set up the DOM objects and event listeners for the quiz slide
@@ -163,11 +181,6 @@ let destroyTemplates = function () {
   highScoresContentEl.innerHTML = "";
 };
 
-let main = function () {
-  startTimer();
-  startQuiz();
-};
-
 initStartListeners();
 
-destroyTemplates();
+//destroyTemplates();
