@@ -17,14 +17,14 @@
   <main class="page-content" id="page-content">
     <!-- Display quiz questions and other calls to action for users -->
     <section class="content-wrapper">
-      <h1>Coding Quiz Challenge</h1>
-      <p>
+      <h1>Coding Quiz Challenge</h1>      
+      <div>
         Try to answer the following code-related questions within the time limit.
-      </p>
-      <p>
+      </div>
+      <div>
         Keep in mind that incorrect answers will penalize your score/time by ten seconds!
-      </p>
-      <button class="btnStart" id="btnStart">Start Quiz</button>
+      </div>
+      <div><button class="btn" id="btnStart">Start Quiz</button></div>
     </section>
 
     <!-- Display results of last answered question -->
@@ -33,21 +33,52 @@
     </section>
   </main>
 
-  <main class="page-content" id="quiz-content-template">
+  <div class="page-content" id="quiz-content-template">
     <!-- Display quiz questions and other calls to action for users -->
     <section class="content-wrapper">
-      <h1>Here is the question</h1>
-      <div><button class="btnStart" id="btnA" value="a">1. Answer</button></div>
-      <div><button class="btnStart" id="btnB" value="b">2. Answer</button></div>
-      <div><button class="btnStart" id="btnC" value="c">3. Answer</button></div>
-      <div><button class="btnStart" id="btnD" value="d">4. Answer</button></div>
+      <h1 id="question">Here is the question</h1>
+      <div><button class="btn" id="btnAnswer1" value="1">1. Answer</button></div>
+      <div><button class="btn" id="btnAnswer2" value="2">2. Answer</button></div>
+      <div><button class="btn" id="btnAnswer3" value="3">3. Answer</button></div>
+      <div><button class="btn" id="btnAnswer4" value="4">4. Answer</button></div>
     </section>
 
     <!-- Display results of last answered question -->
     <section class="result-wrapper">
       Correct!      
     </section>
-  </main>
+  </div>
+
+  <div class="page-content" id="results-content-template">
+    <!-- Display quiz questions and other calls to action for users -->
+    <section class="content-wrapper">
+      <h1>All done!</h1>
+      <div>
+        Your final score is <span id="score"></span>.
+      </div>
+      <div>
+        Enter initials: <input type="text" class="id="initials"" id="initials" /><button class="btn btnSubmitScore" id="btnSubmitScore">Submit</button>
+      </div>
+    </section>
+
+    <!-- Display results of last answered question -->
+    <section class="result-wrapper">
+      Correct!      
+    </section>
+  </div>
+
+  <div class="page-content" id="highscores-content-template">
+    <!-- Display quiz questions and other calls to action for users -->
+    <section class="content-wrapper">
+      <h1>High scores</h1>
+      <div>
+        <ul name="displayScores" id="displayScores"></ul>
+      </div>
+      <div>
+        <button class="btn btnSubmitScore" id="btnGoBack">Go Back</button> <button class="btn btnSubmitScore" id="btnClearScores">Clear High Scores</button>
+      </div>
+    </section>
+  </div>
 
   <script src="./assets/js/script.js"></script>
 </body>

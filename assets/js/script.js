@@ -27,29 +27,29 @@ let startTimer = function () {
 
 let startQuiz = function() {
   pageContent.innerHTML = quizHtml;
-  addAnswerListeners();
+  initAnswerListeners();
 }
 
 let checkAnswer = function(event) {
   console.log(event.target.value);
 };
 
-let addStartListeners = function() {
+let initStartListeners = function() {
   goBtn = document.querySelector("#btnStart");
 
   goBtn.addEventListener("click", main);
 }
 
-let addAnswerListeners = function() {
-  aBtn = document.querySelector("#btnA");
-  bBtn = document.querySelector("#btnB");
-  cBtn = document.querySelector("#btnC");
-  dBtn = document.querySelector("#btnD");
+let initAnswerListeners = function() {
+  answer1Btn = document.querySelector("#btnAnswer1");
+  answer2Btn = document.querySelector("#btnAnswer2");
+  answer3Btn = document.querySelector("#btnAnswer3");
+  answer4Btn = document.querySelector("#btnAnswer4");
 
-  aBtn.addEventListener("click", checkAnswer);
-  bBtn.addEventListener("click", checkAnswer);
-  cBtn.addEventListener("click", checkAnswer);
-  dBtn.addEventListener("click", checkAnswer);
+  answer1Btn.addEventListener("click", checkAnswer);
+  answer2Btn.addEventListener("click", checkAnswer);
+  answer3Btn.addEventListener("click", checkAnswer);
+  answer4Btn.addEventListener("click", checkAnswer);
 };
 
 let destroyTemplates = function() {
@@ -61,6 +61,6 @@ let main = function() {
   startQuiz();
 };
 
-addStartListeners();
+initStartListeners();
 
 //destroyTemplates();
