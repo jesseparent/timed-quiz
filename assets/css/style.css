@@ -35,7 +35,7 @@ h1 {
   width:60%;
   color: var(--secondary-text-color);
   border-top: 2px solid;
-  display: none;
+  visibility: hidden;
 }
 
 .btn {
