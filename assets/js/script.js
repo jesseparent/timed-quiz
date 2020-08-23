@@ -65,8 +65,8 @@ let startQuiz = function () {
 let displayQuestion = function () {
   pageContentEl.querySelector("#question").textContent = questions[questionIndex].question;
 
-  for (let i = 1; i <= 4; i++) {
-    eval('pageContentEl.querySelector("#btnAnswer' + i + '").textContent = "' + i + '. " + questions[questionIndex].answer' + i + ';');
+  for (let i = 0; i < questions[questionIndex].answers.length; i++) {
+    eval('pageContentEl.querySelector("#btnAnswer' + i + '").textContent = "' + i + '. " + questions[questionIndex].answers[' + i + '];');
   }
 };
 
@@ -87,7 +87,7 @@ let displayResult = function (answerCorrect) {
 let checkAnswer = function () {
   let userAnswer = event.target.value;
 
-  let answerCorrect = (userAnswer === questions[questionIndex].correctAnswer);
+  let answerCorrect = (userAnswer === questions[questionIndex].correctAnswerIndex);
 
   if (answerCorrect) {
     displayResult(true);
@@ -273,50 +273,56 @@ destroyTemplates();
 const questions = [
   {
     "question": "How do you use Javascript to create and evaluate a string as Javascript?",
-    "answer1": "code()",
-    "answer2": "eval()",
-    "answer3": "generateScript()",
-    "answer4": "evaluate()",
-    "correctAnswer": "2"
+    "answers": [
+      "code()", 
+      "eval()", 
+      "generateScript()", 
+      "evaluate()"],
+    "correctAnswerIndex": "1"
   },
   {
     "question": "What can you put on a form's onSubmit attribute to stop it from submitting?",
-    "answer1": "return null",
-    "answer2": "noSubmit",
-    "answer3": "exit",
-    "answer4": "return false",
-    "correctAnswer": "4"
+    "answers": [
+      "return null", 
+      "noSubmit", 
+      "exit", 
+      "return false"],
+    "correctAnswerIndex": "3"
   },
   {
     "question": "What attribute of the image tag would you change on a rollover event to show a different image?",
-    "answer1": "img",
-    "answer2": "alt",
-    "answer3": "src",
-    "answer4": "file",
-    "correctAnswer": "3"
+    "answers": [ 
+      "img", 
+      "alt",
+      "src",
+      "file"],
+    "correctAnswerIndex": "2"
   },
   {
     "question": "What browser was the American Online Web browser built on top of?",
-    "answer1": "Internet Explorer",
-    "answer2": "Mozilla",
-    "answer3": "Netscape",
-    "answer4": "Opera",
-    "correctAnswer": "1"
+    "answers": [ 
+      "Internet Explorer",
+      "Mozilla",
+      "Netscape",
+      "Opera"],
+    "correctAnswerIndex": "0"
   },
   {
     "question": "What tag did Netscape attempt to make popular as an alternative to the DIV tag?",
-    "answer1": "division",
-    "answer2": "layer",
-    "answer3": "sheet",
-    "answer4": "area",
-    "correctAnswer": "2"
+    "answers": [ 
+      "division",
+      "layer",
+      "sheet",
+      "area"],
+    "correctAnswerIndex": "1"
   },
   {
     "question": "Which scripting language comes after Javascript in terms of native support in browsers available, today?",
-    "answer1": "tcl",
-    "answer2": "python",
-    "answer3": "vbscript",
-    "answer4": "rexx",
-    "correctAnswer": "3"
+    "answers": [
+      "tcl",
+      "python",
+      "vbscript",
+      "rexx"],
+    "correctAnswerIndex": "2"
   }
 ];
