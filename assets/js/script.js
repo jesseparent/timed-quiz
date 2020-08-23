@@ -1,11 +1,11 @@
 // Page objects to access 
 let headerEl = document.querySelector("#header");
+let highScoresLink = document.querySelector("#high-score-link");
 let countdownTimerEl = document.querySelector("#countdown");
 let pageContentEl = document.querySelector("#page-content");
 let quizContentEl = document.querySelector("#quiz-content-template");
 let resultsContentEl = document.querySelector("#results-content-template");
 let highScoresContentEl = document.querySelector("#highscores-content-template");
-let highScoresLink = document.querySelector("#high-score-link");
 
 // Page objects that may not be displayed, yet. Will set up as needed
 let resultsWrapperEl;
@@ -15,7 +15,7 @@ let scoreBtn;
 let goBackBtn;
 let clearScoresBtn;
 
-// Template HTML to swap out in page content area
+// Template HTML to swap out in page content area and switch to different screens
 let startHtml = pageContentEl.innerHTML;
 let quizHtml = quizContentEl.innerHTML;
 let resultsHtml = resultsContentEl.innerHTML;
@@ -28,30 +28,32 @@ let timePenalty = 10;
 let thisInterval;
 
 // Scores
-var scores = [];
+let scores = [];
 
-// quiz variables
+// Quiz variables
 let questionIndex = 0;
 
+// Starts and displays the timer
 let startTimer = function () {
-  // Set the start time for the timer
+  // Set the start time for the timer and display it
   currentTime = startTime;
   countdownTimerEl.textContent = currentTime;
 
-  // Clear any timer before setting it to be "thread safe"
+  // Clear any timer before setting one in order to be "thread safe"
   clearInterval(thisInterval);
 
   // Start timer and exit this function
   thisInterval = setInterval(function () {
     countdownTimerEl.textContent = --currentTime;
     if (currentTime === 0) {
-      // Test is over
+      // Time has been reached and the test is over
       clearInterval(thisInterval);
       endQuiz(null);
     }
   }, 1000);
 };
 
+// Start the quiz and display the first question
 let startQuiz = function () {
   pageContentEl.innerHTML = quizHtml;
   initAnswerListeners();
@@ -63,8 +65,10 @@ let startQuiz = function () {
 
 // Display the current question and answers
 let displayQuestion = function () {
+  // Display the question
   pageContentEl.querySelector("#question").textContent = questions[questionIndex].question;
 
+  // Display the answers as buttons
   for (let i = 0; i < questions[questionIndex].answers.length; i++) {
     eval('pageContentEl.querySelector("#btnAnswer' + i + '").textContent = "' + i + '. " + questions[questionIndex].answers[' + i + '];');
   }
@@ -89,23 +93,32 @@ let checkAnswer = function () {
 
   let answerCorrect = (userAnswer === questions[questionIndex].correctAnswerIndex);
 
+  // Answer is correct
   if (answerCorrect) {
     displayResult(true);
   }
+  // Answer is wrong
   else {
     displayResult(false);
+
+    // Apply time penalty
     currentTime -= timePenalty;
+
+    // Check if we are out of time after the time penalty
     if (currentTime <= 0) {
       currentTime = 0;
       endQuiz(answerCorrect);
       return;
     }
+
+    // Make sure timer display is accurate
     countdownTimerEl.textContent = currentTime;
   }
 
+  // Move on to next question
   questionIndex++;
 
-  // Determine if the quiz if over of if the user gets another question
+  // Determine if the quiz is over of if the user gets another question
   if (questionIndex == questions.length) {
     endQuiz(answerCorrect)
   }
@@ -114,23 +127,29 @@ let checkAnswer = function () {
   }
 };
 
-
 // End the quiz and display the score
 let endQuiz = function (answerCorrect) {
+  // Kill the timer
   clearInterval(thisInterval);
+
+  // Display time left in case a wrong answer was given and the time was reduced before it could be displayed
   countdownTimerEl.textContent = currentTime;
+
+  // Show the results template and initialize the listeners
   pageContentEl.innerHTML = resultsHtml;
   initSubmitScoreListeners();
 
+  // Display the score
   let scoreDisplay = pageContentEl.querySelector("#score");
-
   scoreDisplay.textContent = currentTime;
+
   // If the quiz ended because the last question was answered, display the results of the last question
   if (answerCorrect !== null) {
     displayResult(answerCorrect);
   }
 };
 
+// Store the intials and score of the user in local storage
 let storeScore = function () {
   let initials = pageContentEl.querySelector("#initials").value;
   let scoreObj = {
@@ -138,20 +157,32 @@ let storeScore = function () {
     "score": currentTime
   };
 
+  // Save in local memory
   scores.push(scoreObj);
 
+  // Save in local storage
   saveScores();
 
+  // Display high score list
   displayHighScores();
 };
 
+// Display the high score list
 let displayHighScores = function () {
+  // Kill the timer
   clearInterval(thisInterval);
+
+  // Set the timer display to the current time
   countdownTimerEl.textContent = currentTime;
+
+  // Show the high scores template and initialize the listeners
   pageContentEl.innerHTML = higScoresHtml;
   initHighScoresListeners();
+
+  // Hide the link for high scores and the timer display, but let it take up space in the document flow
   headerEl.style.visibility = "hidden";
 
+  // Create the high score list in HTML
   let displayScoresUL = pageContentEl.querySelector("#displayScores");
 
   for (let i = 0; i < scores.length; i++) {
@@ -160,6 +191,7 @@ let displayHighScores = function () {
   }
 };
 
+// Generate the list item for a specific score in the high score entry
 let generateScoreEntry = function (scoreObj) {
   let scoreLi = document.createElement("li");
   scoreLi.className = "score";
@@ -167,11 +199,17 @@ let generateScoreEntry = function (scoreObj) {
   return scoreLi;
 };
 
+// Show the beginning page of the quiz
 let displayBeginning = function () {
+  // Show the beginning scores template and initialize the listeners
   pageContentEl.innerHTML = startHtml;
   initStartListeners();
+
+  // Reset the timer and the timer display
   currentTime = startTime;
   countdownTimerEl.textContent = currentTime;
+
+  // Show the link for high scores and the timer display (Probably got here from the high scores page)
   headerEl.style.visibility = "visible";
 };
 
@@ -206,7 +244,7 @@ let initHighScoresListeners = function () {
 };
 
 // Save the scores in descending order
-var saveScores = function () {
+let saveScores = function () {
   scores.sort(compareScores);
 
   localStorage.setItem("scores", JSON.stringify(scores));
@@ -214,10 +252,10 @@ var saveScores = function () {
 
 // Load the scores from local storage into memory
 let loadScores = function () {
-  // Gets scores from localStorage
+  // Gets scores from localStorage as a string
   let savedScores = localStorage.getItem("scores");
 
-  // Converts scores the stringified format back into an array of objects
+  // Converts scores in the stringified format back into an array of objects
   if (savedScores) {
     scores = JSON.parse(savedScores);
   }
@@ -242,7 +280,8 @@ let compareScores = function (obj1, obj2) {
   if (obj2.score > obj1.score) {
     return 1;
   }
-  // If a score is tied, sort alphabetically
+
+  // If a score is tied, sort alphabetically by initials
   if (obj1.initials < obj2.initials) {
     return -1;
   }
@@ -263,6 +302,7 @@ let destroyTemplates = function () {
 
 initStartListeners();
 
+// Set behavior for clicking on high scores link. This will never be destroyed, only hidden.
 highScoresLink.addEventListener("click", displayHighScores);
 
 loadScores();
@@ -270,29 +310,33 @@ loadScores();
 destroyTemplates();
 
 // List of questions for quiz
+// STRUCTURE:
+//  question - text of question
+//  answers - array of possibly answers
+//  correctAnswerIndex - array index of correct answer
 const questions = [
   {
     "question": "How do you use Javascript to create and evaluate a string as Javascript?",
     "answers": [
-      "code()", 
-      "eval()", 
-      "generateScript()", 
+      "code()",
+      "eval()",
+      "generateScript()",
       "evaluate()"],
     "correctAnswerIndex": "1"
   },
   {
     "question": "What can you put on a form's onSubmit attribute to stop it from submitting?",
     "answers": [
-      "return null", 
-      "noSubmit", 
-      "exit", 
+      "return null",
+      "noSubmit",
+      "exit",
       "return false"],
     "correctAnswerIndex": "3"
   },
   {
     "question": "What attribute of the image tag would you change on a rollover event to show a different image?",
-    "answers": [ 
-      "img", 
+    "answers": [
+      "img",
       "alt",
       "src",
       "file"],
@@ -300,7 +344,7 @@ const questions = [
   },
   {
     "question": "What browser was the American Online Web browser built on top of?",
-    "answers": [ 
+    "answers": [
       "Internet Explorer",
       "Mozilla",
       "Netscape",
@@ -309,7 +353,7 @@ const questions = [
   },
   {
     "question": "What tag did Netscape attempt to make popular as an alternative to the DIV tag?",
-    "answers": [ 
+    "answers": [
       "division",
       "layer",
       "sheet",
