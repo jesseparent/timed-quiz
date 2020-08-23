@@ -12,22 +12,14 @@
   --secondary-action-color: magenta;  
 }
 
+/* General Template Layout Elements */
 header {
  display: flex;
  justify-content: space-between;
 }
 
 h1 {
-  font-size: 10 
-}
-
-#high-score-link {
-  color: var(--secondary-action-color);
-  cursor: pointer;
-}
-
-.score:nth-child(odd) {
-  background:var(--secondary-text-color);
+  font-size: 3.2vw;
 }
 
 .page-content {
@@ -43,6 +35,7 @@ h1 {
 
 .result-wrapper {
   width:60%;
+  font-size: 2.4vw;
   color: var(--secondary-text-color);
   border-top: 2px solid;
   visibility: hidden;
@@ -52,8 +45,7 @@ h1 {
   border: none;
   background-color:  var(--primary-action-color);
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 6px 0px rgba(0, 0, 0, 0.2) 0px 1px 1px
-    0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 6px 0px rgba(0, 0, 0, 0.2) 0px 1px 1px 0px;
   color: hsl(0, 0%, 100%);
   display: inline-block;
   font-size: 22px;
@@ -68,6 +60,12 @@ h1 {
   background-color: var(--secondary-action-color);;
 }
 
+/* Results/Enter Scores */
+input[type=text] {
+  border: 2px solid var(--secondary-action-color);
+  border-radius: 4px;
+}
+
 .btnSubmitScore {
   margin: 0 10px;
 }
@@ -80,6 +78,17 @@ h1 {
   padding: 0px;
 }
 
+/* Display High Scores */
+#high-score-link {
+  color: var(--secondary-action-color);
+  cursor: pointer;
+}
+
+.score:nth-child(odd) {
+  background:#D3D3D3;
+}
+
+/* Hide All Inactive Templates */
 #quiz-content-template {
   display: none;    
 }
@@ -90,4 +99,17 @@ h1 {
 
 #highscores-content-template {
   display: none;   
+}
+
+/* MEDIA QUERY FOR MOBILE PHONES AND SMALLER */
+@media screen and (max-width: 575px) {
+  header {
+    justify-content: space-around;
+   }   
+
+   #answers {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+  }
 }

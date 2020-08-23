@@ -14,6 +14,7 @@ let answersDiv;
 let scoreBtn;
 let goBackBtn;
 let clearScoresBtn;
+let inputTxt;
 
 // Template HTML to swap out in page content area and switch to different screens
 let startHtml = pageContentEl.innerHTML;
@@ -70,7 +71,7 @@ let displayQuestion = function () {
 
   // Display the answers as buttons
   for (let i = 0; i < questions[questionIndex].answers.length; i++) {
-    eval('pageContentEl.querySelector("#btnAnswer' + i + '").textContent = "' + i + '. " + questions[questionIndex].answers[' + i + '];');
+    eval('pageContentEl.querySelector("#btnAnswer' + i + '").textContent = "' + (i + 1) + '. " + questions[questionIndex].answers[' + i + '];');
   }
 };
 
@@ -152,6 +153,13 @@ let endQuiz = function (answerCorrect) {
 // Store the intials and score of the user in local storage
 let storeScore = function () {
   let initials = pageContentEl.querySelector("#initials").value;
+
+  // Check if the user entered their initials
+  if (initials === "") {
+    alert("Please enter initials in order to submit a high score");
+    return;
+  }
+
   let scoreObj = {
     "initials": initials,
     "score": currentTime
@@ -195,8 +203,17 @@ let displayHighScores = function () {
 let generateScoreEntry = function (scoreObj) {
   let scoreLi = document.createElement("li");
   scoreLi.className = "score";
-  scoreLi.innerHTML = scoreObj.initials + " -- " + scoreObj.score;
+  scoreLi.innerHTML = scoreObj.initials + " &mdash; " + scoreObj.score;
   return scoreLi;
+};
+
+// if the user presses enter in the input text on the enter score page, submit the score
+let handleEnter = function (event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Trigger the submit button element with a click
+    submitBtn.click();
+  }
 };
 
 // Show the beginning page of the quiz
@@ -215,29 +232,31 @@ let displayBeginning = function () {
 
 // Set up the DOM objects and event listeners for the start slide
 let initStartListeners = function () {
-  startBtn = document.querySelector("#btnStart");
+  startBtn = pageContentEl.querySelector("#btnStart");
 
   startBtn.addEventListener("click", startQuiz);
 };
 
 // Set up the DOM objects and event listeners for the quiz slide
 let initAnswerListeners = function () {
-  answersDiv = document.querySelector("#answers");
+  answersDiv = pageContentEl.querySelector("#answers");
 
   answersDiv.addEventListener("click", checkAnswer);
 };
 
 // Set up the DOM objects and event listeners for the results/score submission slide
 let initSubmitScoreListeners = function () {
-  submitBtn = document.querySelector("#btnSubmitScore");
+  submitBtn = pageContentEl.querySelector("#btnSubmitScore");
+  inputTxt = pageContentEl.querySelector("#initials");
 
   submitBtn.addEventListener("click", storeScore);
+  inputTxt.addEventListener("keyup", handleEnter);
 };
 
 // Set up the DOM objects and event listeners for the high scores slide
 let initHighScoresListeners = function () {
-  goBackBtn = document.querySelector("#btnGoBack");
-  clearScoresBtn = document.querySelector("#btnClearScores");
+  goBackBtn = pageContentEl.querySelector("#btnGoBack");
+  clearScoresBtn = pageContentEl.querySelector("#btnClearScores");
 
   goBackBtn.addEventListener("click", displayBeginning);
   clearScoresBtn.addEventListener("click", clearScores);
