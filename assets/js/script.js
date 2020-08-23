@@ -1,31 +1,3 @@
-// List of questions for quiz
-const questions = [
-  {
-    "question": "Question 1",
-    "answer1": "Answer 1",
-    "answer2": "Answer 2",
-    "answer3": "Answer 3",
-    "answer4": "Answer 4",
-    "correctAnswer": "1"
-  },
-  {
-    "question": "Question 2",
-    "answer1": "Answer 1",
-    "answer2": "Answer 2",
-    "answer3": "Answer 3",
-    "answer4": "Answer 4",
-    "correctAnswer": "1"
-  },
-  {
-    "question": "Question 3",
-    "answer1": "Answer 1",
-    "answer2": "Answer 2",
-    "answer3": "Answer 3",
-    "answer4": "Answer 4",
-    "correctAnswer": "1"
-  }
-]
-
 // Page objects to access 
 let headerEl = document.querySelector("#header");
 let countdownTimerEl = document.querySelector("#countdown");
@@ -38,10 +10,7 @@ let highScoresLink = document.querySelector("#high-score-link");
 // Page objects that may not be displayed, yet. Will set up as needed
 let resultsWrapperEl;
 let startBtn;
-let aBtn;
-let bBtn;
-let cBtn;
-let dBtn;
+let answersDiv;
 let scoreBtn;
 let goBackBtn;
 let clearScoresBtn;
@@ -116,7 +85,7 @@ let displayResult = function (answerCorrect) {
 
 // Check answer and display if the user got it right or wrong on the next screen
 let checkAnswer = function () {
-  let userAnswer = this.value;
+  let userAnswer = event.target.value;
 
   let answerCorrect = (userAnswer === questions[questionIndex].correctAnswer);
 
@@ -215,23 +184,19 @@ let initStartListeners = function () {
 
 // Set up the DOM objects and event listeners for the quiz slide
 let initAnswerListeners = function () {
-  answer1Btn = document.querySelector("#btnAnswer1");
-  answer2Btn = document.querySelector("#btnAnswer2");
-  answer3Btn = document.querySelector("#btnAnswer3");
-  answer4Btn = document.querySelector("#btnAnswer4");
+  answersDiv = document.querySelector("#answers");
 
-  answer1Btn.addEventListener("click", checkAnswer);
-  answer2Btn.addEventListener("click", checkAnswer);
-  answer3Btn.addEventListener("click", checkAnswer);
-  answer4Btn.addEventListener("click", checkAnswer);
+  answersDiv.addEventListener("click", checkAnswer);
 };
 
+// Set up the DOM objects and event listeners for the results/score submission slide
 let initSubmitScoreListeners = function () {
   submitBtn = document.querySelector("#btnSubmitScore");
 
   submitBtn.addEventListener("click", storeScore);
 };
 
+// Set up the DOM objects and event listeners for the high scores slide
 let initHighScoresListeners = function () {
   goBackBtn = document.querySelector("#btnGoBack");
   clearScoresBtn = document.querySelector("#btnClearScores");
@@ -240,9 +205,10 @@ let initHighScoresListeners = function () {
   clearScoresBtn.addEventListener("click", clearScores);
 };
 
+// Save the scores in descending order
 var saveScores = function () {
   scores.sort(compareScores);
-  console.dir(scores);
+
   localStorage.setItem("scores", JSON.stringify(scores));
 };
 
@@ -284,3 +250,55 @@ highScoresLink.addEventListener("click", displayHighScores);
 loadScores();
 
 destroyTemplates();
+
+// List of questions for quiz
+const questions = [
+  {
+    "question": "How do you use Javascript to create and evaluate a string as Javascript?",
+    "answer1": "code()",
+    "answer2": "eval()",
+    "answer3": "generateScript()",
+    "answer4": "evaluate()",
+    "correctAnswer": "2"
+  },
+  {
+    "question": "What can you put on a form's onSubmit attribute to stop it from submitting?",
+    "answer1": "return null",
+    "answer2": "noSubmit",
+    "answer3": "exit",
+    "answer4": "return false",
+    "correctAnswer": "4"
+  },
+  {
+    "question": "What attribute of the image tag would you change on a rollover event to show a different image?",
+    "answer1": "img",
+    "answer2": "alt",
+    "answer3": "src",
+    "answer4": "file",
+    "correctAnswer": "3"
+  },
+  {
+    "question": "What browser was the American Online Web browser built on top of?",
+    "answer1": "Internet Explorer",
+    "answer2": "Mozilla",
+    "answer3": "Netscape",
+    "answer4": "Opera",
+    "correctAnswer": "1"
+  },
+  {
+    "question": "What tag did Netscape attempt to make popular as an alternative to the DIV tag?",
+    "answer1": "division",
+    "answer2": "layer",
+    "answer3": "sheet",
+    "answer4": "area",
+    "correctAnswer": "2"
+  },
+  {
+    "question": "Which scripting language comes after Javascript in terms of native support in browsers available, today?",
+    "answer1": "tcl",
+    "answer2": "python",
+    "answer3": "vbscript",
+    "answer4": "rexx",
+    "correctAnswer": "3"
+  }
+];
