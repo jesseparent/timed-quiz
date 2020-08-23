@@ -212,6 +212,7 @@ var saveScores = function () {
   localStorage.setItem("scores", JSON.stringify(scores));
 };
 
+// Load the scores from local storage into memory
 let loadScores = function () {
   // Gets scores from localStorage
   let savedScores = localStorage.getItem("scores");
@@ -225,15 +226,32 @@ let loadScores = function () {
   }
 };
 
+// Clear the scores from memory and local storage
 let clearScores = function () {
   scores = [];
   saveScores();
   displayHighScores();
 }
 
-// Compare function for array sort by scores
+// Compare function for array sort by scores descending, then names ascending
 let compareScores = function (obj1, obj2) {
-  return obj2.score - obj1.score;
+  // Sort by score descending
+  if (obj2.score < obj1.score) {
+    return -1;
+  }
+  if (obj2.score > obj1.score) {
+    return 1;
+  }
+  // If a score is tied, sort alphabetically
+  if (obj1.initials < obj2.initials) {
+    return -1;
+  }
+  if (obj1.initials > obj2.initials) {
+    return 1;
+  }
+
+  // All fields match
+  return 0;
 };
 
 // Just in case there are conflicts with ids in templates, get rid of them
